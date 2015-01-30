@@ -19,11 +19,15 @@ public class Connect4 extends AnchorPane implements Connect4able   {
     private Connect4AI redUI, yellowUI;
     private Rectangle highlightedColumn;
 
-    public Connect4(Connect4AI redUI, boolean userFirst) {
+    public Connect4(Connect4AI ui, Color first,  Color user) {
         setup();
     }
 
-    public Connect4(Connect4AI redUI, Connect4 yellowUI) {
+    public Connect4(Connect4AI redUI, Connect4AI yellowUI, Color first) {
+        setup();
+    }
+
+    public Connect4(Color first) {
         setup();
     }
 
