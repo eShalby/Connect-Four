@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 /**
  * Created by oj on 1/23/15.
  */
-public class Connect4 extends AnchorPane implements Connect4able   {
+public class Connect4 extends AnchorPane implements Connect4able {
     public static final int ROWS = 6, COLS = 7, TOKEN_RADIUS = 40, TOKEN_SPACING = 10;
 
     private Circle[][] gameBoard;
@@ -19,15 +19,36 @@ public class Connect4 extends AnchorPane implements Connect4able   {
     private Connect4AI redUI, yellowUI;
     private Rectangle highlightedColumn;
 
-    public Connect4(Connect4AI ui, Color first,  Color user) {
+    public Connect4(Color first, Color user, Connect4AI ui) throws InvalidGameStateException {
+        if (first.equals(Color.RED) || first.equals(Color.YELLOW) || user.equals(Color.RED) || user.equals(Color.YELLOW)) {
+            currentPlayer = first;
+            if (user.equals(Color.RED))
+                yellowUI = ui;
+            else
+                redUI = ui;
+        } else
+            throw new InvalidGameStateException("Only Color.RED and Color.YELLOW are allowed Tokens");
+
         setup();
     }
 
-    public Connect4(Connect4AI redUI, Connect4AI yellowUI, Color first) {
+    public Connect4(Color first, Connect4AI redUI, Connect4AI yellowUI) throws InvalidGameStateException {
+        if (first.equals(Color.RED) || first.equals(Color.YELLOW)) {
+            currentPlayer = first;
+            this.yellowUI = yellowUI;
+            this.redUI = redUI;
+        } else
+            throw new InvalidGameStateException("Only Color.RED and Color.YELLOW are allowed Tokens");
+
         setup();
     }
 
-    public Connect4(Color first) {
+    public Connect4(Color first) throws InvalidGameStateException {
+        if (first.equals(Color.RED) || first.equals(Color.YELLOW)) {
+            currentPlayer = first;
+        } else
+            throw new InvalidGameStateException("Only Color.RED and Color.YELLOW are allowed Tokens");
+
         setup();
     }
 
@@ -38,7 +59,7 @@ public class Connect4 extends AnchorPane implements Connect4able   {
     private void setup() {
         gameBoard = new Circle[ROWS][COLS];
         currentPlayer = Color.RED;
-        highlightedColumn = new Rectangle(2 * (TOKEN_RADIUS + TOKEN_SPACING),ROWS * 2 * (TOKEN_RADIUS + TOKEN_SPACING));
+        highlightedColumn = new Rectangle(2 * (TOKEN_RADIUS + TOKEN_SPACING), ROWS * 2 * (TOKEN_RADIUS + TOKEN_SPACING));
 
         highlightedColumn.setFill(currentPlayer);
         highlightedColumn.setOpacity(0.3);
@@ -67,7 +88,7 @@ public class Connect4 extends AnchorPane implements Connect4able   {
             }
         });
 
-        setOnMouseMoved(event-> {
+        setOnMouseMoved(event -> {
             int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
             highlightedColumn.setLayoutX(col * 2 * (TOKEN_RADIUS + TOKEN_SPACING));
 

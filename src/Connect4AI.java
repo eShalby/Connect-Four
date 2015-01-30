@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  */
 public interface Connect4AI {
 
-    int getMove(Color[][] board);
+    int getMove(Color[][] board, Color me);
 
     Image getImage();
 
