@@ -5,6 +5,8 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Connect4App extends Application {
@@ -21,7 +23,11 @@ public class Connect4App extends Application {
         stage.setScene(scene);
         stage.setTitle("Connect4");  //text for the title bar of the window
 
-        connect4 = new Connect4();
+        try {
+            connect4 = new Connect4(Color.RED, Color.YELLOW, new MisterAI());
+        } catch (InvalidGameStateException e) {
+            root.setCenter(new Text(e.getMessage()));
+        }
         root.setCenter(connect4);
 
         stage.show();

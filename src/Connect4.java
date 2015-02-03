@@ -15,7 +15,7 @@ import javafx.util.Duration;
  * Created by oj on 1/23/15.
  */
 public class Connect4 extends AnchorPane implements Connect4able {
-    public static final int ROWS = 6, COLS = 7, TOKEN_RADIUS = 40, TOKEN_SPACING = 10;
+    public static final int ROWS = 6, COLS = 7, TOKEN_RADIUS = 40, TOKEN_SPACING = 10, AI_TURN_MS = 500;
 
     private Circle[][] gameBoard;
     private Color currentPlayer;
@@ -55,10 +55,6 @@ public class Connect4 extends AnchorPane implements Connect4able {
         setup();
     }
 
-    public Connect4() {
-        setup();
-    }
-
     private void setup() {
         gameBoard = new Circle[ROWS][COLS];
         currentPlayer = Color.RED;
@@ -91,6 +87,12 @@ public class Connect4 extends AnchorPane implements Connect4able {
             setOnMouseClicked(event -> {
                 int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
                 addToken(col);
+                int row = 0;
+
+                while (row < ROWS && ((Color)gameBoard[row][col].getFill()).equals(Color.WHITE))
+                    row++;
+                highlightedColumn.setHeight(row *  2 * (TOKEN_RADIUS + TOKEN_SPACING));
+
                 if (currentPlayer.equals(Color.RED))
                     currentPlayer = Color.YELLOW;
                 else
@@ -112,6 +114,12 @@ public class Connect4 extends AnchorPane implements Connect4able {
 
             setOnMouseMoved(event -> {
                 int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
+
+                int row = 0;
+                while (row < ROWS && ((Color)gameBoard[row][col].getFill()).equals(Color.WHITE))
+                    row++;
+                highlightedColumn.setHeight(row *  2 * (TOKEN_RADIUS + TOKEN_SPACING));
+
                 highlightedColumn.setLayoutX(col * 2 * (TOKEN_RADIUS + TOKEN_SPACING));
             });
 
@@ -121,10 +129,11 @@ public class Connect4 extends AnchorPane implements Connect4able {
             setOnMouseEntered(null);
             setOnMouseExited(null);
             setOnMouseMoved(null);
-            Timeline timeline = new Timeline(new KeyFrame(new Duration(1000),event -> {
+            Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS),event -> {
                 Color[][] board = duplicate();
                 addToken(redUI.getMove(board, Color.RED));
                 currentPlayer = Color.YELLOW;
+                processTurn();
             }));
             timeline.play();
         } else {
@@ -132,10 +141,11 @@ public class Connect4 extends AnchorPane implements Connect4able {
             setOnMouseEntered(null);
             setOnMouseExited(null);
             setOnMouseMoved(null);
-            Timeline timeline = new Timeline(new KeyFrame(new Duration(1000),event -> {
+            Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS),event -> {
                 Color[][] board = duplicate();
                 addToken(yellowUI.getMove(board, Color.YELLOW));
                 currentPlayer = Color.RED;
+                processTurn();
             }));
             timeline.play();
         }
