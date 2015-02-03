@@ -8,6 +8,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -26,6 +28,7 @@ public class Connect4 extends AnchorPane implements Connect4able {
     private Color currentPlayer;
     private Connect4AI redUI, yellowUI;
     private Rectangle highlightedColumn;
+    private MediaPlayer dropSound;
 
     public Connect4(Color first, Color user, Connect4AI ui) throws InvalidGameStateException {
         if (first.equals(Color.RED) || first.equals(Color.YELLOW) || user.equals(Color.RED) || user.equals(Color.YELLOW)) {
@@ -61,6 +64,7 @@ public class Connect4 extends AnchorPane implements Connect4able {
     }
 
     private void setup() {
+        dropSound = new MediaPlayer(new Media(Connect4.class.getResource("drop.mp3").toString()));
         gameBoard = new Circle[ROWS][COLS];
         currentPlayer = Color.RED;
         highlightedColumn = new Rectangle(2 * (TOKEN_RADIUS + TOKEN_SPACING), ROWS * 2 * (TOKEN_RADIUS + TOKEN_SPACING));
@@ -86,68 +90,74 @@ public class Connect4 extends AnchorPane implements Connect4able {
     }
 
     private void processTurn() {
-        if (currentPlayer.equals(Color.RED) && redUI == null || currentPlayer.equals(Color.YELLOW) && yellowUI == null) {
-            highlightedColumn.setFill(currentPlayer);
+        if (!isGameOver()) {
+            if (currentPlayer.equals(Color.RED) && redUI == null || currentPlayer.equals(Color.YELLOW) && yellowUI == null) {
+                highlightedColumn.setFill(currentPlayer);
 
-            setOnMouseClicked(event -> {
-                int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
-                addToken(col);
-                updateHighlighter(col);
+                setOnMouseClicked(event -> {
+                    int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
+                    addToken(col);
+                    updateHighlighter(col);
 
-                if (currentPlayer.equals(Color.RED))
+                    if (currentPlayer.equals(Color.RED))
+                        currentPlayer = Color.YELLOW;
+                    else
+                        currentPlayer = Color.RED;
+                    processTurn();
+                });
+
+                setOnMouseEntered(event -> {
+                    if (!getChildren().contains(highlightedColumn)) {
+                        getChildren().add(highlightedColumn);
+                    }
+                });
+
+                setOnMouseExited(event -> {
+                    if (getChildren().contains(highlightedColumn)) {
+                        getChildren().remove(highlightedColumn);
+                    }
+                });
+
+                setOnMouseMoved(event -> {
+                    int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
+
+                    updateHighlighter(col);
+                });
+
+
+            } else if (currentPlayer.equals(Color.RED)) {
+                setOnMouseClicked(null);
+                setOnMouseEntered(null);
+                setOnMouseExited(null);
+                setOnMouseMoved(null);
+                Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS), event -> {
+                    Color[][] board = duplicate();
+                    addToken(redUI.getMove(board, Color.RED));
                     currentPlayer = Color.YELLOW;
-                else
+                    processTurn();
+                }));
+                timeline.play();
+            } else {
+                setOnMouseClicked(null);
+                setOnMouseEntered(null);
+                setOnMouseExited(null);
+                setOnMouseMoved(null);
+                Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS), event -> {
+                    Color[][] board = duplicate();
+                    addToken(yellowUI.getMove(board, Color.YELLOW));
                     currentPlayer = Color.RED;
-                processTurn();
-            });
-
-            setOnMouseEntered(event -> {
-                if (!getChildren().contains(highlightedColumn)) {
-                    getChildren().add(highlightedColumn);
-                }
-            });
-
-            setOnMouseExited(event -> {
-                if (getChildren().contains(highlightedColumn)) {
-                    getChildren().remove(highlightedColumn);
-                }
-            });
-
-            setOnMouseMoved(event -> {
-                int col = (int) (event.getX() / (2 * (TOKEN_RADIUS + TOKEN_SPACING)));
-
-                updateHighlighter(col);
-            });
-
-
-        } else if (currentPlayer.equals(Color.RED)) {
-            setOnMouseClicked(null);
-            setOnMouseEntered(null);
-            setOnMouseExited(null);
-            setOnMouseMoved(null);
-            Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS),event -> {
-                Color[][] board = duplicate();
-                addToken(redUI.getMove(board, Color.RED));
-                currentPlayer = Color.YELLOW;
-                processTurn();
-            }));
-            timeline.play();
-        } else {
-            setOnMouseClicked(null);
-            setOnMouseEntered(null);
-            setOnMouseExited(null);
-            setOnMouseMoved(null);
-            Timeline timeline = new Timeline(new KeyFrame(new Duration(AI_TURN_MS),event -> {
-                Color[][] board = duplicate();
-                addToken(yellowUI.getMove(board, Color.YELLOW));
-                currentPlayer = Color.RED;
-                processTurn();
-            }));
-            timeline.play();
+                    processTurn();
+                }));
+                timeline.play();
+            }
         }
     }
 
     private void addToken(int col) {
+        dropSound.stop();
+        dropSound.seek(new Duration(0));
+        dropSound.play();
+
         int r = 0;
 
         while (r < ROWS - 1 && (gameBoard[r][col].getFill()).equals(Color.WHITE)) {
