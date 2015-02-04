@@ -297,6 +297,7 @@ public class Connect4 extends AnchorPane implements Connect4able {
             } else {
                 c++;
             }
+
         }
 
         //check diagonal2
