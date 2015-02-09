@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Created by 40095 on 1/24/15.
  */
 public class JonsAiIsBetterThanLinus extends Connect4Player {
+    boolean isBetterThanLinus = true;
     ArrayList<Group> winningGroups, losingGroups, zugzwangGroups, winnableGroups, groups, tripleGroups, trickyThreats;
     String mode;
     boolean verbose;
