@@ -25,6 +25,7 @@ public class DanielAI implements  Connect4AI {
             if(board[0][i].equals(Color.WHITE))
                 playableColumn.add(i);
         }
+        int randomerino = (int)(Math.random() * playableColumn.size());
         //THIS PART IS FOR THE AI
         for (int k = 5; k>= 0; k--) {  //Horizontal Search
             for (int i = 0; i < 4; i++) {
@@ -45,7 +46,7 @@ public class DanielAI implements  Connect4AI {
                     if(i > 0){
                         if(k < 5 ){
                             if(board[k-1][i-1] == Color.WHITE){
-                                return (int)(playableColumn.size() * Math.random());
+                                return playableColumn.get(randomerino);
                             }
                         }
                         if(board[k][i-1] == Color.WHITE){
@@ -56,7 +57,7 @@ public class DanielAI implements  Connect4AI {
                         if(board[k][i+3] == Color.WHITE && board[k][i] == colorOfAi && board[k][i+2] == colorOfAi && board[k][i+1] == colorOfAi){
                             if(k < 5 )
                                 if(board[k-1][i+3] == Color.WHITE){
-                                    return (int)(playableColumn.size() * Math.random());
+                                    return playableColumn.get(randomerino);
                                 }
 
                             return i+3;
@@ -66,7 +67,7 @@ public class DanielAI implements  Connect4AI {
                 if (board[k][i] == colorOfAi && board[k][i + 1] == colorOfAi && board[k][i + 3] == colorOfAi) {
                     if(k < 5 ){
                         if(board[k-1][i+2] == Color.WHITE){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
                     }
                     return i + 2;
@@ -74,7 +75,7 @@ public class DanielAI implements  Connect4AI {
                 if (board[k][i] == colorOfAi && board[k][i + 2] == colorOfAi && board[k][i + 3] == colorOfAi) {
                     if(k < 5 ){
                         if(board[k-1][i+1] == Color.WHITE){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
                     }
                     return i + 1;
@@ -86,9 +87,9 @@ public class DanielAI implements  Connect4AI {
                 if(board[j][i] == colorOfAi && board[j-1][i] == colorOfAi && board[j-2][i] == colorOfAi){
                     if(board[0][i] != Color.WHITE){
                         if(i == 0){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
-                        return (int)(playableColumn.size() * Math.random());
+                        return playableColumn.get(randomerino);
                     }
                     return i;
                 }
@@ -158,7 +159,7 @@ public class DanielAI implements  Connect4AI {
                     if(board[k][i-1] == Color.WHITE && board[k][i] == notColorOfAi && board[k][i+1] == notColorOfAi && board[k][i+2] == notColorOfAi){
                         if(k < 5 ){
                             if(board[k-1][i-1] == Color.WHITE){
-                                return (int)(playableColumn.size() * Math.random());
+                                return playableColumn.get(randomerino);
                             }
                         }
                         return i-1;
@@ -168,7 +169,7 @@ public class DanielAI implements  Connect4AI {
                     if(board[k][i+3] == Color.WHITE && board[k][i] == notColorOfAi && board[k][i+1] == notColorOfAi && board[k][i+2] == notColorOfAi){
 
                         if(board[k-1][i+3] == Color.WHITE){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
 
                         return i+3;
@@ -178,7 +179,7 @@ public class DanielAI implements  Connect4AI {
                 if (board[k][i] == notColorOfAi && board[k][i + 1] == notColorOfAi && board[k][i + 3] == notColorOfAi) {
                     if(k< 5 ){
                         if(board[k-1][i+2] == Color.WHITE){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
                     }
                     return i + 2;
@@ -188,7 +189,7 @@ public class DanielAI implements  Connect4AI {
                 if (board[k][i] == notColorOfAi && board[k][i + 2] == notColorOfAi && board[k][i + 3] == notColorOfAi) {
                     if(k < 5 ){
                         if(board[k-1][i+1] == Color.WHITE){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
                     }
                     return i + 1;
@@ -201,9 +202,9 @@ public class DanielAI implements  Connect4AI {
                 if(board[j][i] == notColorOfAi && board[j-1][i] == notColorOfAi && board[j-2][i] == notColorOfAi){
                     if(board[0][i] != Color.WHITE){
                         if(i == 0){
-                            return (int)(playableColumn.size() * Math.random());
+                            return playableColumn.get(randomerino);
                         }
-                        return (int)(playableColumn.size() * Math.random());
+                        return playableColumn.get(randomerino);
                     }
                     return i;
                 }
@@ -256,7 +257,7 @@ public class DanielAI implements  Connect4AI {
         }
 
 
-        return (int)(playableColumn.size() * Math.random());
+        return playableColumn.get(randomerino);
     }
 
 
