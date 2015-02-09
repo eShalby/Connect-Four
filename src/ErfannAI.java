@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
  * Created by 37181 on 1/30/15.
  */
 public class ErfannAI implements Connect4AI {
-    Color me;
+    Color me ;
 
     public ErfannAI(Color me) {
         this.me = me;
