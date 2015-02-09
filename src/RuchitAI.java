@@ -41,7 +41,7 @@ public class RuchitAI implements Connect4AI {
 
 
     }
-        return board.set(b)(a+1);
+        return board[b][a+1];
     }
 
     @Override
