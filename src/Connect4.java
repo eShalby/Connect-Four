@@ -215,7 +215,6 @@ public class Connect4 extends AnchorPane implements Connect4able {
 
     @Override
     public void dropToken(int col) {
-
     }
 
     @Override
