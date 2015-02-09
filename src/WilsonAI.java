@@ -14,6 +14,7 @@ public class WilsonAI implements Connect4AI {
     private int     finalCol  = -1;
     public static final int ROWS = 6, COLS = 7;
 
+
     private Circle[][] gameBoard;
     private Color currentPlayer;
     private Connect4AI redUI, yellowUI;
