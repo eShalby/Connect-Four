@@ -9,10 +9,7 @@ public class MisterAI implements Connect4AI {
     //will return a value 0-6
     @Override
     public int getMove(Color[][] board, Color me) {
-
-
         return (int)(Math.random() * 7);
-
     }
 
     @Override
